@@ -1,0 +1,12 @@
+#!/Users/jbb/co/contentmirror.grok/bin/python
+
+import sys
+sys.path[0:0] = [
+  '/Users/jbb/.buildout/eggs/setuptools-0.6c9-py2.5.egg',
+  '/Users/jbb/.buildout/eggs/zc.buildout-1.2.1-py2.5.egg',
+  ]
+
+import zc.buildout.buildout
+
+if __name__ == '__main__':
+    zc.buildout.buildout.main()

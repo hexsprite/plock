@@ -1,0 +1,14 @@
+[buildout]
+develop = . z3c.saconfig
+parts = test
+newest = false
+extends = http://grok.zope.org/releaseinfo/grok-0.13.cfg
+versions = versions
+
+[versions]
+zc.recipe.testrunner = 1.0.0
+
+[test]
+recipe = zc.recipe.testrunner
+eggs = megrok.rdb
+defaults = ['--tests-pattern', '^f?tests$', '-v']

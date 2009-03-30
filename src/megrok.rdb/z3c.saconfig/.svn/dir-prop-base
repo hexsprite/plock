@@ -1,0 +1,10 @@
+K 10
+svn:ignore
+V 39
+develop-eggs
+bin
+parts
+.installed.cfg
+
+
+END

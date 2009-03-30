@@ -1,0 +1,16 @@
+K 13
+svn:externals
+V 63
+z3c.saconfig svn://svn.zope.org/repos/main/z3c.saconfig/trunk
+
+
+K 10
+svn:ignore
+V 39
+bin
+parts
+.installed.cfg
+develop-eggs
+
+
+END

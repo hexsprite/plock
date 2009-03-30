@@ -1,0 +1,94 @@
+==================================
+SQLAlchemy schema to Zope 3 schema
+==================================
+
+We can convert SQLAlchemy schemas to Zope 3 schemas, which can then
+for instance be used to generate forms and the like.
+
+First we define a model with a SQLAlchemy schema::
+
+  >>> from sqlalchemy import Column, ForeignKey
+  >>> from sqlalchemy.types import Integer, String
+  >>> from sqlalchemy.orm import relation
+
+  >>> from megrok import rdb
+  >>> metadata = rdb.MetaData()
+  >>> class Department(rdb.Model):
+  ...   rdb.metadata(metadata)
+  ...
+  ...   id = Column('id', Integer, primary_key=True)
+  ...   name = Column('name', String(50))
+  
+Let's grok the ``Department`` class now::
+
+  >>> from grok.testing import grok
+  >>> grok('megrok.rdb.meta')
+  >>> grok('megrok.rdb.schema')
+  >>> __file__ = 'foo' # hack
+  >>> from grok.testing import grok_component
+  >>> grok_component('Department', Department)
+  True
+
+We then convert the schema to a Zope 3 schema::
+
+  >>> from megrok.rdb.schema import schema_from_model
+  >>> schema = schema_from_model(Department)
+
+The schema will have one field, ``name``. The primary key is not
+included by default::
+
+  >>> list(schema)
+  ['name']
+
+The name field will be a TextLine::
+
+  >>> from zope.schema import TextLine
+  >>> isinstance(schema['name'], TextLine)
+  True
+
+Field order
+-----------
+
+The order of the schema fields is the same as the order in the
+SQLAlchemy definition::
+
+  >>> class Person(rdb.Model):
+  ...   rdb.metadata(metadata)
+  ...
+  ...   id = Column('id', Integer, primary_key=True)
+  ...   first_name = Column('first_name', String(50))
+  ...   last_name = Column('last_name', String(50))
+  >>> grok_component('Person', Person)
+  True
+  >>> schema = schema_from_model(Person)
+  >>> from zope.schema import getFieldsInOrder
+
+We define a function which shows the fields in the schema in schema
+order::
+
+  >>> def names(schema):
+  ...    return [name for (name, field) in getFieldsInOrder(schema)]
+
+The fields are in the definition order as they are in the table::
+
+  >>> names(schema)
+  ['first_name', 'last_name']
+
+Let's try a few more fields::
+
+  >>> class Person2(rdb.Model):
+  ...   rdb.metadata(metadata)
+  ...
+  ...   id = Column('id', Integer, primary_key=True)
+  ...   c = Column('c', String(50))
+  ...   b = Column('b', String(50))
+  ...   a = Column('a', String(50))
+  >>> grok_component('Person2', Person2)
+  True
+
+  >>> schema = schema_from_model(Person2)
+
+The fields are in the right order::
+
+  >>> names(schema)
+  ['c', 'b', 'a']

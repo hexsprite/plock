@@ -1,0 +1,11 @@
+setuptools
+zope.sqlalchemy>=0.3
+zope.interface
+zope.component
+zope.hookable
+zope.security
+zope.event
+zope.configuration
+
+[test]
+zope.testing

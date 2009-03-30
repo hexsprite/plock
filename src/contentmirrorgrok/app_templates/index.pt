@@ -1,0 +1,13 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>Congratulations!</h1>
+
+  <ul>
+    <li tal:repeat="content view/contents">
+      <a tal:attributes="href python:view.url(content)" tal:content="content/title"></a>
+    </li>
+  </ul>
+  </body>
+</html>

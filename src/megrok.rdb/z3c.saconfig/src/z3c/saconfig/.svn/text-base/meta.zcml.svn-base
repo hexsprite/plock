@@ -1,0 +1,23 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:meta="http://namespaces.zope.org/meta"
+           i18n_domain="z3c.saconfig">
+
+  <include package="zope.component" file="meta.zcml" />
+  
+  <meta:directives namespace="http://namespaces.zope.org/db">
+
+    <meta:directive
+       name="engine"
+       schema=".zcml.IEngineDirective"
+       handler=".zcml.engine"
+       />
+
+    <meta:directive
+       name="session"
+       schema=".zcml.ISessionDirective"
+       handler=".zcml.session"
+       />
+
+  </meta:directives>
+
+</configure>
