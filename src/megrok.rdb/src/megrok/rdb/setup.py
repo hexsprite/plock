@@ -40,9 +40,28 @@ def reflectTables(metadata):
     metadata.reflect(bind=engine)
     if not hasattr(metadata, '_decl_registry'):
         metadata._decl_registry = {}
-    # now declaratively set up any reflected classes
-    for class_ in metadata._reflected_registry.keys():
+
+    for class_ in sorted(metadata._reflected_registry.keys(), key=lambda a: getattr(a, '__polymorphic_inherits__', 0)):
+    # for class_ in metadata._reflected_registry.keys():
+        # __polymorphic_on__ = ('content', 'portal_type')
+        # __polymorphic_identify__ = 'content'
+        mapper_args = getattr(class_, '__mapper_args__', {})
+        if hasattr(class_, '__polymorphic_on__'):
+            tablename, column = class_.__polymorphic_on__
+            mapper_args['polymorphic_on'] = getattr(metadata.tables[tablename].c, column)
+        if hasattr(class_, '__polymorphic_identity__'):
+            mapper_args['polymorphic_identity'] = class_.__polymorphic_identity__
+        if hasattr(class_, '__polymorphic_inherits__'):
+            mapper_args['inherits'] = class_.__polymorphic_inherits__
+
+        if mapper_args:
+            class_.__mapper_args__ = mapper_args
+
+        import sys
+        print >>sys.stderr, class_, repr(mapper_args)
+
         instrument_declarative(class_, metadata._decl_registry, metadata)
+
     # XXX thread safety?
     metadata._reflected_completed = True
 

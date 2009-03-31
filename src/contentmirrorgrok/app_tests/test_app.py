@@ -22,3 +22,7 @@ class SimpleSampleTest(unittest.TestCase):
         page = grokapp['front-page']
         folder = grokapp['Members']
         self.assertEqual(folder.keys(), [u'my-page'])
+
+        # test that text is retrieved
+        self.failUnless(page.text)
+        import pdb; pdb.set_trace()

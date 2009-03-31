@@ -17,11 +17,6 @@ class tablename(Directive):
     store = ONCE
     default = u''
 
-class mapper(Directive):
-    scope = CLASS
-    store = ONCE
-    default = u''
-
 class reflected(MarkerDirective):
     scope = CLASS_OR_MODULE
     store = ONCE

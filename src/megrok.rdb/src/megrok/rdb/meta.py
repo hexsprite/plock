@@ -14,7 +14,6 @@ class ModelGrokker(martian.ClassGrokker):
     martian.directive(rdb.metadata)
     martian.directive(rdb.reflected)
     martian.directive(rdb.tableargs)
-    martian.directive(rdb.mapper)
 
     def execute(self, class_, tablename, metadata, reflected, tableargs, **kw):
         class_.__tablename__ = tablename
