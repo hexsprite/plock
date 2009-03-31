@@ -46,32 +46,28 @@ class Folder(rdb.QueryContainer):
             value = session.query(FolderContainer).get(value.content_id)
         else:
             pass
-#        extend_attributes(value)
         return value
             
     def keyfunc(self, value):
-            """
-            Given the value (object) return the id
-            """
-            return value.id
-            
+        """
+        Given the value (object) return the id
+        """
+        return value.id
+        
     def dbget(self, key):
         # we need this because we filter out only the objects in our container by query()
-        return self._query().filter_by(id=key, container_id=self.container_id).all()[0]
-
+        return self._query().filter_by(id=key, container_id=self.content_id).first()
 
 class Content(rdb.Model):
-    content_id = Column('content_id', Integer, primary_key=True)
-    id = Column('id', String)
-    title = Column('title', String(127))
-    container_id = Column('container_id', Integer)
-    portal_type = Column('portal_type', String)
+    __table_args__ = dict()
+    rdb.reflected()
 
 class FolderContainer(Folder, rdb.Model):
+    __table_args__ = dict(useexisting=True)
     rdb.tablename('content')
     rdb.reflected()
 
-class Contentmirrorgrok(grok.Application, FolderContainer):
+class Contentmirrorgrok(grok.Application, Folder):
     def _query(self):
         session = rdb.Session()
         return session.query(Content)
@@ -81,12 +77,17 @@ class Contentmirrorgrok(grok.Application, FolderContainer):
         
     def dbget(self, key):
         # we need this because we filter out only the objects in our container by query()
-        return self._query().filter_by(id=key, container_id=None).all()[0]
+        return self._query().filter_by(id=key, container_id=None).first()
 
-
+class ContentIndex(grok.View):
+    grok.context(Content)
+    grok.name('index')
+    
+    def render(self):
+        return "My title is %s" % self.context.title
+    
 class Index(grok.View):
-    grok.context(Contentmirrorgrok)
+    grok.context(Folder)
+    
     def contents(self):
-        session = rdb.Session()
-        for content in session.query(Content).all():
-            yield located(content, self.context, str(content.id))
+        return self.context.values()
