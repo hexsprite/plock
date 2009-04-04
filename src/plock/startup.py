@@ -9,7 +9,7 @@ def application_factory(global_conf):
     zope_conf = os.path.join(global_conf['zope_conf'])
     return zope.app.wsgi.getWSGIApplication(zope_conf)
 
-def interactive_debug_prompt(zope_conf='/Users/jbb/co/contentmirror.grok/contentmirrorgrok/etc/zope.conf'):
+def interactive_debug_prompt(zope_conf='/Users/jbb/co/plock/plock/etc/zope.conf'):
     db = zope.app.wsgi.config(zope_conf)
     debugger = zope.app.debug.Debugger.fromDatabase(db)
     # Invoke an interactive interpreter shell
@@ -30,6 +30,6 @@ class ControllerCommands(zdaemon.zdctl.ZDCmd):
         print "debug -- Initialize the application, providing a debugger"
         print "         object at an interactive Python prompt."
 
-def zdaemon_controller(zdaemon_conf='/Users/jbb/co/contentmirror.grok/contentmirrorgrok/etc/zdaemon.conf'):
+def zdaemon_controller(zdaemon_conf='/Users/jbb/co/plock/plock/etc/zdaemon.conf'):
     args = ['-C', zdaemon_conf] + sys.argv[1:]
     zdaemon.zdctl.main(args, options=None, cmdclass=ControllerCommands)

@@ -2,7 +2,7 @@
 <head>
 </head>
 <body>
-  <h1>Congratulations!</h1>
+  <h1>Document View</h1>
 
   <ul>
     <li tal:repeat="content view/contents">

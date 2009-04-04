@@ -3,11 +3,11 @@ Do a functional doctest test on the app.
 
 :Test-Layer: functional
 
-Let's first create an instance of Contentmirrorgrok at the top level:
+Let's first create an instance of Plock at the top level:
 
-   >>> from contentmirrorgrok.app import Contentmirrorgrok
+   >>> from plock.app import Plock
    >>> root = getRootFolder()
-   >>> root['app'] = Contentmirrorgrok()
+   >>> root['app'] = Plock()
 
 
 Run tests in the testbrowser

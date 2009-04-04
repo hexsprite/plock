@@ -1,15 +1,10 @@
 import grok
 from megrok import rdb
 
-from zope.location.location import located
-
-from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import Integer, String
-from sqlalchemy.orm import relation, join, mapper
-
 from z3c.saconfig import EngineFactory, GloballyScopedSession
-from z3c.saconfig.interfaces import IEngineFactory, IEngineCreatedEvent
+from z3c.saconfig.interfaces import IEngineCreatedEvent
 
+# TODO: move to some better config
 TEST_DSN = 'sqlite:////tmp/contentmirror.db'
 engine_factory = EngineFactory(TEST_DSN)
 scoped_session = GloballyScopedSession()
@@ -29,7 +24,7 @@ rdb.metadata(metadata)
 def setUpDatabase(event):
     rdb.setupDatabase(metadata)
 
-class Folder(rdb.QueryContainer):
+class PlockContainer(rdb.QueryContainer):
     def _query(self):
         session = rdb.Session()
         return session.query(Content)
@@ -49,28 +44,30 @@ class Folder(rdb.QueryContainer):
         return self._query().filter_by(id=key, container_id=self.content_id).first()
 
 class Content(rdb.Model):
-    __polymorphic_on__ = ('content', 'type')
+    rdb.polymorphic_on('content', 'type')
     __polymorphic_identity__ = 'content'
     rdb.reflected()
 
-class FolderContainer(Folder, Content, rdb.Model):
-    __table_args__ = dict(useexisting=True)
+# interesting, PlockContainer has to come before Content or else we get the Content view.
+class Folder(PlockContainer, Content):
+    __table_args__ = dict(useexisting=True) #rdb.tableargs(useexisting=True)
     rdb.tablename('content')
     rdb.reflected()
     __polymorphic_inherits__ = Content  #rdb.inherits(Content)
-    __polymorphic_identity__ = u'ATBTreeFolderPeer'
+    # TODO, be polymorphic on more than one value?
+    __polymorphic_identity__ = u'ATBTreeFolderPeer' #rdb.identity()
 
-class Contentmirrorgrok(grok.Application, Folder):
-    def _query(self):
-        session = rdb.Session()
-        return session.query(Content)
-
-    def query(self):
-        return self._query().filter_by(container_id=None)
+class Plock(grok.Application, PlockContainer):
+    def __init__(self, *args, **kwargs):
+        super(Plock, self).__init__(*args, **kwargs)
+        self.content_id = None
         
-    def dbget(self, key):
-        # we need this because we filter out only the objects in our container by query()
-        return self._query().filter_by(id=key, container_id=None).first()
+    # def query(self):
+    #     return self._query().filter_by(container_id=None)
+    #     
+    # def dbget(self, key):
+    #     # we need this because we filter out only the objects in our container by query()
+    #     return self._query().filter_by(id=key, container_id=None).first()
 
 class ATDocument(Content):
     rdb.tablename('atdocument')
@@ -86,7 +83,7 @@ class ContentIndex(grok.View):
         return "My title is %s" % self.context.title
 
 class Index(grok.View):
-    grok.context(Folder)
+    grok.context(PlockContainer)
     
     def contents(self):
         return self.context.values()
