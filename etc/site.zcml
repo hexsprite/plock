@@ -1,9 +1,9 @@
 <configure xmlns="http://namespaces.zope.org/zope"
-           i18n_domain="contentmirrorgrok">
+           i18n_domain="plock">
 
-  <include package="contentmirrorgrok" />
+  <include package="plock" />
 
-    <configure i18n_domain="contentmirrorgrok">
+    <configure i18n_domain="plock">
     
       <unauthenticatedPrincipal id="zope.anybody"
                                 title="Unauthenticated User" />

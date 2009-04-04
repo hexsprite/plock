@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 version = '0.0'
 
-setup(name='contentmirrorgrok',
+setup(name='plock',
       version=version,
       description="",
       long_description="""\
@@ -27,9 +27,9 @@ setup(name='contentmirrorgrok',
                         ],
       entry_points = """
       [console_scripts]
-      contentmirrorgrok-debug = contentmirrorgrok.startup:interactive_debug_prompt
-      contentmirrorgrok-ctl = contentmirrorgrok.startup:zdaemon_controller
+      plock-debug = plock.startup:interactive_debug_prompt
+      plock-ctl = plock.startup:zdaemon_controller
       [paste.app_factory]
-      main = contentmirrorgrok.startup:application_factory
+      main = plock.startup:application_factory
       """,
       )
