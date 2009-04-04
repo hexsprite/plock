@@ -57,9 +57,6 @@ def reflectTables(metadata):
         if mapper_args:
             class_.__mapper_args__ = mapper_args
 
-        import sys
-        print >>sys.stderr, class_, repr(mapper_args)
-
         instrument_declarative(class_, metadata._decl_registry, metadata)
 
     # XXX thread safety?
