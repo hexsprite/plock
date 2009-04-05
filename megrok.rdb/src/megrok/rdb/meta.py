@@ -14,8 +14,11 @@ class ModelGrokker(martian.ClassGrokker):
     martian.directive(rdb.metadata)
     martian.directive(rdb.reflected)
     martian.directive(rdb.tableargs)
-
-    def execute(self, class_, tablename, metadata, reflected, tableargs, **kw):
+    martian.directive(rdb.inherits)
+    martian.directive(rdb.polymorphic_identity)
+    martian.directive(rdb.polymorphic_on)
+    
+    def execute(self, class_, tablename, metadata, reflected, tableargs, inherits, polymorphic_identity, polymorphic_on, **kw):
         class_.__tablename__ = tablename
         if tableargs is not None:
             class_.__table_args__ = tableargs
@@ -23,7 +26,14 @@ class ModelGrokker(martian.ClassGrokker):
         if reflected:
             if not hasattr(metadata, '_reflected_registry'):
                 metadata._reflected_registry = {}
-            metadata._reflected_registry[class_] = None
+
+            metadata._reflected_registry[class_] = dict(
+                inherits=inherits,
+                polymorphic_on=polymorphic_on,
+                polymorphic_identity=polymorphic_identity,
+                )
+
+
             # if this table is reflected, don't instrument now but
             # manually map later
             return True

@@ -8,7 +8,7 @@ from megrok import rdb
     
 from z3c.saconfig.interfaces import IEngineFactory, IScopedSession
 
-from megrok.rdb.tests import tableargs
+from megrok.rdb.tests import tableargs, polymorphic
 
 def moduleSetUp(test):
     # using zope.testing.module.setUp to work around
@@ -61,4 +61,5 @@ def test_suite():
         optionflags=optionflags,
         ))
     suite.addTest(tableargs.suite())
+    suite.addTest(polymorphic.suite())
     return suite

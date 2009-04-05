@@ -21,6 +21,24 @@ class reflected(MarkerDirective):
     scope = CLASS_OR_MODULE
     store = ONCE
 
+class inherits(Directive):
+    scope = CLASS
+    store = ONCE
+    default = None
+
+class polymorphic_on(Directive):
+    scope = CLASS
+    store = ONCE
+    default = None
+    
+    def factory(self, table, column):
+        return table, column
+
+class polymorphic_identity(Directive):
+    scope = CLASS
+    store = ONCE
+    default = None
+
 class tableargs(Directive):
     scope = CLASS
     store = ONCE

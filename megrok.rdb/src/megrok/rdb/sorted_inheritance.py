@@ -15,7 +15,7 @@ d = {
 
 l = [A, B, C]
 
-def f(x, y):
+def sorted_inheritance(x, y):
     if x is y:
         return 0
     if inherits(x, y):
@@ -33,4 +33,4 @@ def inherits(x, y):
         return True
     return inherits(potential_base, y)
 
-print sorted(l, cmp=f)
+print sorted(l, cmp=sorted_inheritance)
