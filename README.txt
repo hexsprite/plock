@@ -10,6 +10,7 @@ RUNNING THE EXAMPLE
 -------------------
 
 $ bin/buildout -v
+$ cp test.db /tmp/contentmirror.db
 $ bin/paster serve parts/etc/deploy.ini
 
 Login and create a plock application.
