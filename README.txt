@@ -4,15 +4,25 @@ Using it you can quickly deploy a purely SQL-based front-end to a Plone site qui
 
 test.db is a SQLLite database for testing purposes.
 
-AUTHOR
-------
+Why not Plok? Plock is a song by the band Plone.
 
-Jordan Baker <jbb@scryent.com>
+RUNNING THE EXAMPLE
+-------------------
+
+$ bin/buildout -v
+$ bin/paster serve parts/etc/deploy.ini
+
+Login and create a plock application.
 
 RUNNING TESTS
 -------------
 
 bin/test -s plock 
+
+AUTHOR
+------
+
+Jordan Baker <jbb@scryent.com>
 
 TODO
 ----
@@ -21,8 +31,3 @@ TODO
 
 - test.db needs to have a record for atdocument added to it so its complete.
 
-- rebuild with the newest grokproject so buildout is less brittle wrt paths
-
-=====
-
-Why not Plok? Plock is a song by the band Plone.  Look it up sometime

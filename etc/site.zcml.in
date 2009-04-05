@@ -16,8 +16,8 @@
       <principal id="zope.manager"
                  title="Manager"
                  login="admin"
-                 password_manager="Plain Text"
-                 password="admin"
+                 password_manager="SHA1"
+                 password="ad4edd80d033e22ae348aeb5660fc2140aec35850c4da997"
                  />
 
       <!-- Replace the following directive if you do not want

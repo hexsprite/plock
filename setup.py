@@ -21,15 +21,16 @@ setup(name='plock',
       install_requires=['setuptools',
                         'grok',
                         'grokui.admin',
+                        'grokcore.startup',
                         'z3c.testsetup',
                         'megrok.rdb',
                         # Add extra requirements here
                         ],
       entry_points = """
       [console_scripts]
-      plock-debug = plock.startup:interactive_debug_prompt
-      plock-ctl = plock.startup:zdaemon_controller
+      plock-debug = grokcore.startup:interactive_debug_prompt
+      plock-ctl = grokcore.startup:zdaemon_controller
       [paste.app_factory]
-      main = plock.startup:application_factory
+      main = grokcore.startup:application_factory
       """,
       )
