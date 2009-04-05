@@ -21,6 +21,8 @@ TODO
 
 - test.db needs to have a record for atdocument added to it so its complete.
 
+- rebuild with the newest grokproject so buildout is less brittle wrt paths
+
 =====
 
 Why not Plok? Plock is a song by the band Plone.  Look it up sometime

@@ -14,6 +14,7 @@ grok.global_utility(scoped_session, direct=True)
 # we set up the SQLAlchemy metadata object to which we'll associate all the
 # SQLAlchemy-backed objects
 metadata = rdb.MetaData()
+
 # we declare to megrok.rdb that all SQLAlchemy-managed mapped instances
 # are associated with this metadata. This directive can also be used
 # on a per rdb.Model subclass basis
@@ -24,6 +25,16 @@ rdb.metadata(metadata)
 def setUpDatabase(event):
     rdb.setupDatabase(metadata)
 
+class Content(rdb.Model):
+    """
+    XXX not sure if polymorphic_identity is needed here
+    """
+    rdb.tablename('content')
+    rdb.polymorphic_on('content', 'type')
+    rdb.polymorphic_identity('content')
+    rdb.reflected()
+
+# interesting, PlockContainer has to come before Content or else we get the Content view.
 class PlockContainer(rdb.QueryContainer):
     def _query(self):
         session = rdb.Session()
@@ -42,38 +53,23 @@ class PlockContainer(rdb.QueryContainer):
     def dbget(self, key):
         # we need this because we filter out only the objects in our container by query()
         return self._query().filter_by(id=key, container_id=self.content_id).first()
-
-class Content(rdb.Model):
-    rdb.polymorphic_on('content', 'type')
-    __polymorphic_identity__ = 'content'
-    rdb.reflected()
-
-# interesting, PlockContainer has to come before Content or else we get the Content view.
+        
 class Folder(PlockContainer, Content):
-    __table_args__ = dict(useexisting=True) #rdb.tableargs(useexisting=True)
+    # rdb.tableargs(useexisting=True)
     rdb.tablename('content')
     rdb.reflected()
-    __polymorphic_inherits__ = Content  #rdb.inherits(Content)
-    # TODO, be polymorphic on more than one value?
-    __polymorphic_identity__ = u'ATBTreeFolderPeer' #rdb.identity()
+    rdb.inherits(Content)
+    # TODO, be polymorphic on more than one value? eg 'ATFolderPeer'
+    rdb.polymorphic_identity('ATBTreeFolderPeer')
 
 class Plock(grok.Application, PlockContainer):
-    def __init__(self, *args, **kwargs):
-        super(Plock, self).__init__(*args, **kwargs)
-        self.content_id = None
+    content_id = None
         
-    # def query(self):
-    #     return self._query().filter_by(container_id=None)
-    #     
-    # def dbget(self, key):
-    #     # we need this because we filter out only the objects in our container by query()
-    #     return self._query().filter_by(id=key, container_id=None).first()
-
 class ATDocument(Content):
     rdb.tablename('atdocument')
     rdb.reflected()
-    __polymorphic_inherits__ = Content  #rdb.inherits(Content)
-    __polymorphic_identity__ = 'ATDocumentPeer'
+    rdb.inherits(Content)
+    rdb.polymorphic_identity('ATDocumentPeer')
 
 class ContentIndex(grok.View):
     grok.context(Content)
